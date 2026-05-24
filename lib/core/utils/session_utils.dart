@@ -51,20 +51,36 @@ class SessionUtils {
     final seconds = duration.inSeconds % 60;
 
     if (minutes == 0 && includeSeconds) {
-      return seconds == 1 ? '1 second' : '$seconds seconds';
+      return _pluralSeconds(seconds);
     }
 
     if (minutes == 0) {
-      return 'Less than 1 minute';
+      return 'Меньше минуты';
     }
 
-    String result = minutes == 1 ? '1 minute' : '$minutes minutes';
+    String result = _pluralMinutes(minutes);
 
     if (includeSeconds && seconds > 0) {
-      result += seconds == 1 ? ' 1 second' : ' $seconds seconds';
+      result += ' ${_pluralSeconds(seconds)}';
     }
 
     return result;
+  }
+
+  static String _pluralMinutes(int n) {
+    if (n % 10 == 1 && n % 100 != 11) return '$n минута';
+    if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) {
+      return '$n минуты';
+    }
+    return '$n минут';
+  }
+
+  static String _pluralSeconds(int n) {
+    if (n % 10 == 1 && n % 100 != 11) return '$n секунда';
+    if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) {
+      return '$n секунды';
+    }
+    return '$n секунд';
   }
 
   /// Creates a session start timestamp.

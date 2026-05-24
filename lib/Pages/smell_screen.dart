@@ -145,7 +145,7 @@ class SmellScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Представь запах\nлаванды',
+            'Представь запах\nирисов',
             textAlign: TextAlign.center,
             style: AppTextStyles.heading3.copyWith(
               letterSpacing: 1.3,

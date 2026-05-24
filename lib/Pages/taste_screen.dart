@@ -136,7 +136,7 @@ class TasteScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Представь вкус\nлимонного мороженого',
+            'Представь вкус\nхрустящей картошечки\nс чедером и луком',
             textAlign: TextAlign.center,
             style: AppTextStyles.heading3.copyWith(
               letterSpacing: 1.3,
