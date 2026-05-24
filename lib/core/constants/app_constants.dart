@@ -150,12 +150,12 @@ class AppAudio {
   ];
 
   static const List<String> musicLabels = [
-    'Waves',
-    'Rain',
-    'Birds',
-    'Fire',
-    'Forest',
-    'Wind',
+    'Волны',
+    'Дождь',
+    'Птицы',
+    'Огонь',
+    'Лес',
+    'Ветер',
   ];
 
   // Pop sound effects for bubble game
@@ -234,9 +234,9 @@ class BreathingConstants {
   static const int exhaleSeconds = 3;
 
   // Breathing phases
-  static const String inhalePhase = 'INHALE';
-  static const String holdPhase = 'HOLD';
-  static const String exhalePhase = 'EXHALE';
+  static const String inhalePhase = 'Вдох';
+  static const String holdPhase = 'Задержка';
+  static const String exhalePhase = 'Выдох';
 
   // Prevent instantiation
   BreathingConstants._();

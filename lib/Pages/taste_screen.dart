@@ -136,7 +136,7 @@ class TasteScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Imagine the taste of\nLemon Ice Cream',
+            'Представь вкус\nлимонного мороженого',
             textAlign: TextAlign.center,
             style: AppTextStyles.heading3.copyWith(
               letterSpacing: 1.3,
@@ -145,7 +145,7 @@ class TasteScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.smallPadding),
           Text(
-            'Or find something you can taste',
+            'Или попробуй что-нибудь рядом',
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyTextSecondary.copyWith(
               letterSpacing: 1.0,
@@ -162,12 +162,12 @@ class TasteScreen extends StatelessWidget {
     return Column(
       children: [
         AppElevatedButton(
-          text: 'Next',
+          text: 'Далее',
           widthRatio: AppSizes.buttonWidthRatio,
           onPressed: () => _navigateToSmellScreen(context),
         ),
         AppTextButton(
-          text: 'Finish Session',
+          text: 'Завершить сеанс',
           onPressed: () => _navigateToFinishScreen(context),
         ),
       ],

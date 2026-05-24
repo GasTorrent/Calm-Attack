@@ -73,7 +73,7 @@ class FinishScreen extends StatelessWidget {
   /// Builds the congratulations header text.
   Widget _buildCongratulationsHeader() {
     return Text(
-      'Congratulations!',
+      'Отлично!',
       style: AppTextStyles.heading1.copyWith(
         fontSize: 40,
         color: AppColors.primaryBlue,
@@ -85,7 +85,7 @@ class FinishScreen extends StatelessWidget {
   /// Builds the motivational message text.
   Widget _buildMotivationalMessage() {
     return Text(
-      'You survived your panic attack, you are\nin control of your mind and body.',
+      'Ты справился с панической атакой.\nТвой разум и тело под контролем.',
       style: AppTextStyles.bodyMedium.copyWith(
         fontSize: 18,
         color: AppColors.textPrimary,
@@ -112,7 +112,7 @@ class FinishScreen extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'Total Spent Time',
+          'Время сеанса',
           style: AppTextStyles.bodyMedium.copyWith(
             fontSize: 20,
             color: AppColors.textPrimary,
@@ -134,7 +134,7 @@ class FinishScreen extends StatelessWidget {
   /// Builds the Back to Home button with responsive sizing.
   Widget _buildBackToHomeButton(BuildContext context, Size screenSize) {
     return AppElevatedButton(
-      text: 'Back to Home',
+      text: 'На главную',
       widthRatio: 0.53,
       backgroundColor: AppColors.primaryBlue,
       textStyle: AppTextStyles.buttonMedium,

@@ -36,7 +36,7 @@ class StartScreen extends StatelessWidget {
 
               // Main welcome message
               const ScreenHeader(
-                title: 'Are you having a\nPanic Attack?',
+                title: 'У тебя\nпаническая атака?',
                 titleStyle: AppTextStyles.heading1,
               ),
 
@@ -78,7 +78,7 @@ class StartScreen extends StatelessWidget {
   /// 3. Passes the session start time for tracking
   Widget _buildGetStartedButton(BuildContext context) {
     return AppElevatedButton(
-      text: 'Get Started',
+      text: 'Начать',
       onPressed: () => _handleGetStarted(context),
     );
   }

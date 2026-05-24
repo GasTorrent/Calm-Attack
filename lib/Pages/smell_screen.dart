@@ -145,7 +145,7 @@ class SmellScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Imagine the smell of\nLavender',
+            'Представь запах\nлаванды',
             textAlign: TextAlign.center,
             style: AppTextStyles.heading3.copyWith(
               letterSpacing: 1.3,
@@ -154,7 +154,7 @@ class SmellScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.smallPadding),
           Text(
-            'Or smell any available scent',
+            'Или понюхай что-нибудь рядом',
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyTextSecondary.copyWith(
               letterSpacing: 1.0,
@@ -171,12 +171,12 @@ class SmellScreen extends StatelessWidget {
     return Column(
       children: [
         AppElevatedButton(
-          text: 'Next',
+          text: 'Далее',
           widthRatio: AppSizes.buttonWidthRatio,
           onPressed: () => _navigateToBubbleGame(context),
         ),
         AppTextButton(
-          text: 'Finish Session',
+          text: 'Завершить сеанс',
           onPressed: () => _navigateToFinishScreen(context),
         ),
       ],

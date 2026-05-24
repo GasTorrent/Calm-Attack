@@ -184,7 +184,7 @@ class _BubblePopGameScreenState extends State<BubblePopGameScreen> {
   void _handleIncorrectBubblePop() {
     NavigationUtils.showSnackBar(
       context,
-      'Please pop bubble number $_nextNumberToPop',
+      'Лопни пузырь №$_nextNumberToPop',
     );
   }
 
@@ -258,7 +258,7 @@ class _BubblePopGameScreenState extends State<BubblePopGameScreen> {
         children: [
           const SizedBox(height: AppSizes.spacingLarge), // Increased to move text down more
           Text(
-            'Pop the Bubbles\nin Order',
+            'Лопай пузыри\nпо порядку',
             textAlign: TextAlign.center,
             style: AppTextStyles.heading3.copyWith(
               letterSpacing: 1.3,
@@ -310,12 +310,12 @@ class _BubblePopGameScreenState extends State<BubblePopGameScreen> {
     return Column(
       children: [
         AppElevatedButton(
-          text: 'Next',
+          text: 'Далее',
           widthRatio: AppSizes.buttonWidthRatio,
           onPressed: () => _navigateToFinish(sessionStart),
         ),
         AppTextButton(
-          text: 'Finish Session',
+          text: 'Завершить сеанс',
           onPressed: () => _navigateToFinish(sessionStart),
         ),
       ],

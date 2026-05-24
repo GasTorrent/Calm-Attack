@@ -142,12 +142,12 @@ class _VibrationScreenState extends State<VibrationScreen> {
     return Column(
       children: [
         Text(
-          'Focus on',
+          'Сосредоточься на',
           style: AppTextStyles.heading3,
           textAlign: TextAlign.center,
         ),
         Text(
-          'The Vibration',
+          'вибрации',
           style: AppTextStyles.heading3,
           textAlign: TextAlign.center,
         ),
@@ -184,12 +184,12 @@ class _VibrationScreenState extends State<VibrationScreen> {
     return Column(
       children: [
         AppElevatedButton(
-          text: 'Next',
+          text: 'Далее',
           widthRatio: AppSizes.buttonWidthRatio,
           onPressed: () => _navigateToTasteScreen(),
         ),
         AppTextButton(
-          text: 'Finish Session',
+          text: 'Завершить сеанс',
           onPressed: () => _navigateToFinishScreen(),
         ),
       ],

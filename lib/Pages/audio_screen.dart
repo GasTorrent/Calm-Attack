@@ -80,7 +80,7 @@ class _AudioScreenState extends State<AudioScreen> {
   /// Builds the main header text.
   Widget _buildHeader() {
     return const Text(
-      'Focus on',
+      'Сосредоточься на',
       style: AppTextStyles.heading2,
     );
   }
@@ -148,12 +148,12 @@ class _AudioScreenState extends State<AudioScreen> {
     return Column(
       children: [
         AppElevatedButton(
-          text: 'Next',
+          text: 'Далее',
           widthRatio: AppSizes.buttonWidthRatio,
           onPressed: () => _navigateToVibrationScreen(),
         ),
         AppTextButton(
-          text: 'Finish Session',
+          text: 'Завершить сеанс',
           onPressed: () => _navigateToFinishScreen(),
         ),
       ],
