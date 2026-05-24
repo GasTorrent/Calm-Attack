@@ -1,54 +1,78 @@
-name: Build Android APK
+name: Build APK
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ master ]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build & Release APK
+    name: Build release APK
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Получаем код репозитория
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Настраиваем Java (Версия 17 оптимальна для Flutter 3.19)
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'gradle'
-
-      # 3. Настраиваем Flutter конкретной версии (Фиксируем 3.19.6)
-      # Это решает проблему несовместимости с новой версией Gradle
-      - name: Setup Flutter
+      # Flutter 3.22.3 — версия, с которой был создан проект (revision f468f3366c)
+      # audioplayers ^6.0.0 требует compileSdk >= 33, minSdk >= 21
+      # flutter_lints ^6.0.0 совместим с Flutter 3.22+
+      - name: Setup Flutter 3.22.3
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'
+          flutter-version: '3.22.3'
+          channel: 'stable'
           cache: true
 
-      # 4. Проверяем установленную версию
-      - name: Check Flutter version
-        run: flutter --version
-
-      # 5. Загружаем зависимости проекта
-      - name: Install dependencies
+      - name: Get dependencies
         run: flutter pub get
 
-      # 6. Собираем APK-файл в режиме release
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Analyze code
+        run: flutter analyze --no-fatal-infos
+        continue-on-error: true
 
-      # 7. Загружаем готовый APK в артефакты GitHub
-      - name: Upload APK Artifact
+      - name: Run tests
+        run: flutter test
+        continue-on-error: true
+
+      # Собираем release APK без подписи (debug-ключ)
+      # Для подписанного APK добавьте секреты KEYSTORE_BASE64, KEY_ALIAS,
+      # KEY_PASSWORD, STORE_PASSWORD и раскомментируйте блок ниже
+      - name: Build APK (release, unsigned)
+        run: flutter build apk --release --no-shrink
+
+      # --- ОПЦИОНАЛЬНО: Сборка подписанного APK ---
+      # Раскомментируйте этот шаг и закомментируйте предыдущий,
+      # если хотите подписывать APK через GitHub Secrets.
+      #
+      # - name: Decode keystore
+      #   run: |
+      #     echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+      #
+      # - name: Build signed APK
+      #   env:
+      #     KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      #     KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      #     STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+      #   run: |
+      #     flutter build apk --release \
+      #       --dart-define=KEY_ALIAS=$KEY_ALIAS \
+      #       --dart-define=KEY_PASSWORD=$KEY_PASSWORD \
+      #       --dart-define=STORE_PASSWORD=$STORE_PASSWORD
+
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Calm-Attack-Release-APK
+          name: calm-attack-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 14
+          retention-days: 30
+
+      # Опционально: создать GitHub Release при пуше тега vX.X.X
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
