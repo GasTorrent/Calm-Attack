@@ -1,33 +1,57 @@
-name: Flutter Build APK
+name: Build Android APK
 
-on: [push, workflow_dispatch]
+# Настраиваем триггеры: сборка будет запускаться при пуше в master/main,
+# при создании Pull Request, а также её можно будет запустить вручную.
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
+    name: Build & Release APK
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      # 1. Получаем код репозитория
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      # 2. Настраиваем Java (Необходимо для сборки Android-проекта через Gradle)
+      # Используем Java 17, так как современные версии Flutter/Gradle требуют её для стабильной работы
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17' # Убедимся, что Java 17, она стабильнее для старых Gradle
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle' # Кешируем зависимости Gradle для ускорения сборок
 
-      - name: Set up Flutter
+      # 3. Настраиваем Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.22.2' # Фиксируем стабильную версию, где нет этого бага с Gradle
+          cache: true # Кешируем SDK для экономии времени
 
+      # 4. Проверяем установленные версии (полезно для отладки, если что-то пойдет не так)
+      - name: Check Flutter version
+        run: flutter --version
+
+      # 5. Загружаем все зависимости проекта
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 6. Собираем APK-файл (в режиме release для лучшей производительности)
       - name: Build APK
-        run: |
-          flutter pub get
-          flutter build apk --release
+        run: flutter build apk --release
 
-      - name: Upload APK
+      # 7. Загружаем готовый APK как артефакт (чтобы его можно было скачать из GitHub)
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: calm-attack-apk
+          name: Calm-Attack-Release-APK
+          # Стандартный путь сохранения собранного APK во Flutter
           path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14 # Хранить файл 14 дней (можно изменить)
