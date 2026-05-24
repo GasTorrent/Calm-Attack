@@ -17,6 +17,9 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Downgrade flutter_lints constraint
+        run: sed -i 's/flutter_lints: \^6.0.0/flutter_lints: ^5.0.0/' pubspec.yaml
+
       - run: flutter pub get
 
       - run: flutter build apk --release --no-shrink
