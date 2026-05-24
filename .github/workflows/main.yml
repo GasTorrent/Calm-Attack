@@ -16,13 +16,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Flutter 3.22.3 — версия, с которой был создан проект (revision f468f3366c)
-      # audioplayers ^6.0.0 требует compileSdk >= 33, minSdk >= 21
-      # flutter_lints ^6.0.0 совместим с Flutter 3.22+
-      - name: Setup Flutter 3.22.3
+      # flutter_lints ^6.0.0 требует Dart SDK ^3.8.0 → Flutter 3.44.0
+      - name: Setup Flutter 3.44.0
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.3'
+          flutter-version: '3.44.0'
           channel: 'stable'
           cache: true
 
@@ -37,19 +35,16 @@ jobs:
         run: flutter test
         continue-on-error: true
 
-      # Собираем release APK без подписи (debug-ключ)
-      # Для подписанного APK добавьте секреты KEYSTORE_BASE64, KEY_ALIAS,
-      # KEY_PASSWORD, STORE_PASSWORD и раскомментируйте блок ниже
-      - name: Build APK (release, unsigned)
+      # Release APK без подписи (debug-ключ по умолчанию)
+      # Для подписанного APK — см. закомментированный блок ниже
+      - name: Build APK (release)
         run: flutter build apk --release --no-shrink
 
-      # --- ОПЦИОНАЛЬНО: Сборка подписанного APK ---
-      # Раскомментируйте этот шаг и закомментируйте предыдущий,
-      # если хотите подписывать APK через GitHub Secrets.
+      # --- ОПЦИОНАЛЬНО: подписанный APK через GitHub Secrets ---
+      # Добавьте секреты: KEYSTORE_BASE64, KEY_ALIAS, KEY_PASSWORD, STORE_PASSWORD
       #
       # - name: Decode keystore
-      #   run: |
-      #     echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+      #   run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
       #
       # - name: Build signed APK
       #   env:
@@ -69,7 +64,7 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
-      # Опционально: создать GitHub Release при пуше тега vX.X.X
+      # Создать GitHub Release при пуше тега вида v1.0.0
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
