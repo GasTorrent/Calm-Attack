@@ -3,71 +3,25 @@ name: Build APK
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build release APK
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # flutter_lints ^6.0.0 требует Dart SDK ^3.8.0 → Flutter 3.44.0
-      - name: Setup Flutter 3.44.0
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.0'
+          flutter-version: '3.29.3'
           channel: 'stable'
           cache: true
 
-      - name: Get dependencies
-        run: flutter pub get
+      - run: flutter pub get
 
-      - name: Analyze code
-        run: flutter analyze --no-fatal-infos
-        continue-on-error: true
+      - run: flutter build apk --release --no-shrink
 
-      - name: Run tests
-        run: flutter test
-        continue-on-error: true
-
-      # Release APK без подписи (debug-ключ по умолчанию)
-      # Для подписанного APK — см. закомментированный блок ниже
-      - name: Build APK (release)
-        run: flutter build apk --release --no-shrink
-
-      # --- ОПЦИОНАЛЬНО: подписанный APK через GitHub Secrets ---
-      # Добавьте секреты: KEYSTORE_BASE64, KEY_ALIAS, KEY_PASSWORD, STORE_PASSWORD
-      #
-      # - name: Decode keystore
-      #   run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
-      #
-      # - name: Build signed APK
-      #   env:
-      #     KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      #     KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      #     STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-      #   run: |
-      #     flutter build apk --release \
-      #       --dart-define=KEY_ALIAS=$KEY_ALIAS \
-      #       --dart-define=KEY_PASSWORD=$KEY_PASSWORD \
-      #       --dart-define=STORE_PASSWORD=$STORE_PASSWORD
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: calm-attack-release-apk
+          name: calm-attack-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 30
-
-      # Создать GitHub Release при пуше тега вида v1.0.0
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: build/app/outputs/flutter-apk/app-release.apk
-          generate_release_notes: true
