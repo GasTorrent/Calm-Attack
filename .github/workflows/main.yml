@@ -1,7 +1,5 @@
 name: Build Android APK
 
-# Настраиваем триггеры: сборка будет запускаться при пуше в master/main,
-# при создании Pull Request, а также её можно будет запустить вручную.
 on:
   push:
     branches: [ "master", "main" ]
@@ -19,39 +17,38 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Настраиваем Java (Необходимо для сборки Android-проекта через Gradle)
-      # Используем Java 17, так как современные версии Flutter/Gradle требуют её для стабильной работы
+      # 2. Настраиваем Java (Версия 17 оптимальна для Flutter 3.19)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle' # Кешируем зависимости Gradle для ускорения сборок
+          cache: 'gradle'
 
-      # 3. Настраиваем Flutter
+      # 3. Настраиваем Flutter конкретной версии (Фиксируем 3.19.6)
+      # Это решает проблему несовместимости с новой версией Gradle
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
-          cache: true # Кешируем SDK для экономии времени
+          version: '3.19.6'
+          cache: true
 
-      # 4. Проверяем установленные версии (полезно для отладки, если что-то пойдет не так)
+      # 4. Проверяем установленную версию
       - name: Check Flutter version
         run: flutter --version
 
-      # 5. Загружаем все зависимости проекта
+      # 5. Загружаем зависимости проекта
       - name: Install dependencies
         run: flutter pub get
 
-      # 6. Собираем APK-файл (в режиме release для лучшей производительности)
+      # 6. Собираем APK-файл в режиме release
       - name: Build APK
         run: flutter build apk --release
 
-      # 7. Загружаем готовый APK как артефакт (чтобы его можно было скачать из GitHub)
+      # 7. Загружаем готовый APK в артефакты GitHub
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Calm-Attack-Release-APK
-          # Стандартный путь сохранения собранного APK во Flutter
           path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 14 # Хранить файл 14 дней (можно изменить)
+          retention-days: 14
